@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeu Point and Click</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: black;
+        }
+        .scene {
+            position: relative;
+            width: 500px;
+            height: 500px;
+            background-size: cover;
+            background-position: center;
+        }
+        .clickable {
+            position: absolute;
+            cursor: pointer;
+            opacity: 1; /* Permet de voir les zones pour le dev */
+        }
+        .clickable:hover {
+            opacity: 0.8;
+        }
+ 
+    </style>
+</head>
+<body>
+
+    <div id="game">
+        <div id="room" class="scene" style="background-image: url('images/face_ascenceur1.jpg');">
+            <div class="clickable" id="door" style="top: 32%; left: 80%; width: 2%; height: 8%;"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("door").addEventListener("click", function() {
+            document.getElementById("room").style.backgroundImage = "url('images/face_ascenceur2.jpg')";
+        });
+    </script>
+
+</body>
+</html>
