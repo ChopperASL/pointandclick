@@ -1,46 +1,162 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jeu Point and Click</title>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            background: black;
-        }
-        .scene {
-            position: relative;
-            width: 500px;
-            height: 500px;
-            background-size: cover;
-            background-position: center;
-        }
-        .clickable {
-            position: absolute;
-            cursor: pointer;
-            opacity: 1; /* Permet de voir les zones pour le dev */
-        }
-        .clickable:hover {
-            opacity: 0.8;
-        }
- 
-    </style>
+  <meta charset="UTF-8">
+  <title>Hôtel Mystère - Hotspots Améliorés</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: black;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    #scene {
+      position: relative;
+      height: 100%;
+      width: 100%;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      transition: opacity 0.5s ease;
+      opacity: 1;
+    }
+
+    #fade {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: black;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+      z-index: 10;
+    }
+
+    .hotspot {
+      position: absolute;
+      border: 2px dashed rgba(255, 255, 255, 0.2); /* visible pour debug */
+      z-index: 5;
+      transition: border-color 0.3s;
+    }
+
+    .hotspot:hover {
+      cursor: pointer;
+      border-color: rgba(255, 255, 255, 0.7);
+    }
+  </style>
 </head>
 <body>
 
-    <div id="game">
-        <div id="room" class="scene" style="background-image: url('images/face_ascenceur1.jpg');">
-            <div class="clickable" id="door" style="top: 32%; left: 80%; width: 2%; height: 8%;"></div>
-        </div>
-    </div>
+<div id="scene"></div>
+<div id="fade"></div>
 
-    <script>
-        document.getElementById("door").addEventListener("click", function() {
-            document.getElementById("room").style.backgroundImage = "url('images/face_ascenceur2.jpg')";
-        });
-    </script>
+<script>
+  const scenes = [
+    {
+      img: 'images/face_ascenseur1.jpg',
+      sound: 'clic.mp3',
+      hotspots: [
+        { x: 58.5, y: 58, width: 1, height: 2, targetScene: 1, sound: 'button.mp3' }
+      ],
+      autoNext: null
+    },
+    {
+      img: 'images/face_ascenseur2.jpg',
+      sound: 'ascenseur.mp3',
+      hotspots: [],
+      autoNext: { delay: 4000, targetScene: 3 } 
+    },
+    {
+      img: 'images/face_ascenseur3.jpg',
+      sound: 'entree.mp3',
+      hotspots: [
+        { x: 50, y: 50, width: 10, height: 20, targetScene: 1, sound: 'button.mp3' }
+      ],
+      autoNext: null
+    },
+    {
+      img: 'images/panneau_ascenseur1.jpg',
+      sound: 'ascenseur.mp3',
+      hotspots: [],
+      autoNext: { delay: 4000, targetScene: 3 } 
+    },
+    {
+      img: 'images/panneau_ascenseur2.jpg',
+      sound: 'ascenseur.mp3',
+      hotspots: [],
+      autoNext: null
+    },
+  ];
+
+  let currentScene = 0;
+  let autoTimer = null;
+  const sceneDiv = document.getElementById('scene');
+  const fadeDiv = document.getElementById('fade');
+
+  function playSound(src) {
+    if (src) {
+      const audio = new Audio(src);
+      audio.play();
+    }
+  }
+
+  function clearHotspots() {
+    document.querySelectorAll('.hotspot').forEach(h => h.remove());
+  }
+
+  function createHotspots(hotspots) {
+    clearHotspots();
+
+    hotspots.forEach(h => {
+      const div = document.createElement('div');
+      div.className = 'hotspot';
+      div.style.left = h.x + '%';
+      div.style.top = h.y + '%';
+      div.style.width = h.width + '%';
+      div.style.height = h.height + '%';
+
+      div.addEventListener('click', (e) => {
+        e.stopPropagation();
+        changeScene(h.targetScene, h.sound);
+      });
+
+      sceneDiv.appendChild(div);
+    });
+  }
+
+  function changeScene(index, extraSound = null) {
+    if (autoTimer) {
+      clearTimeout(autoTimer);
+      autoTimer = null;
+    }
+
+    fadeDiv.style.opacity = 1; // Début fondu noir
+    setTimeout(() => {
+      currentScene = index;
+      sceneDiv.style.backgroundImage = `url(${scenes[currentScene].img})`;
+      createHotspots(scenes[currentScene].hotspots);
+      playSound(extraSound || scenes[currentScene].sound);
+      fadeDiv.style.opacity = 0; // Fin fondu
+
+      // Si autonext
+      if (scenes[currentScene].autoNext) {
+        autoTimer = setTimeout(() => {
+          changeScene(scenes[currentScene].autoNext.targetScene);
+        }, scenes[currentScene].autoNext.delay);
+      }
+    }, 500);
+  }
+
+  sceneDiv.style.backgroundImage = `url(${scenes[0].img})`;
+  createHotspots(scenes[0].hotspots);
+  playSound(scenes[0].sound);
+
+</script>
 
 </body>
 </html>
