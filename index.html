@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Hôtel Mystère - Hotspots Améliorés</title>
+  <title>Bienvenue dans l'Hôtel</title>
   <style>
     body, html {
       margin: 0;
@@ -39,7 +39,7 @@
 
     .hotspot {
       position: absolute;
-      border: 2px dashed rgba(255, 255, 255, 0.2); /* visible pour debug */
+      border: 2px dashed rgba(255, 255, 255, 0.2);
       z-index: 5;
       transition: border-color 0.3s;
     }
@@ -61,34 +61,66 @@
       img: 'images/face_ascenseur1.jpg',
       sound: 'clic.mp3',
       hotspots: [
-        { x: 58.5, y: 58, width: 1, height: 2, targetScene: 1, sound: 'button.mp3' }
+        { x: 45, y: 70, width: 10, height: 20, targetScene: 1, sound: 'button.mp3' }
       ],
       autoNext: null
     },
     {
       img: 'images/face_ascenseur2.jpg',
-      sound: 'ascenseur.mp3',
+      sound: 'porte.mp3',
       hotspots: [],
-      autoNext: { delay: 4000, targetScene: 3 } 
+      autoNext: { delay: 4000, targetScene: 2 }
     },
     {
       img: 'images/face_ascenseur3.jpg',
       sound: 'entree.mp3',
       hotspots: [
-        { x: 50, y: 50, width: 10, height: 20, targetScene: 1, sound: 'button.mp3' }
+        { x: 45, y: 70, width: 10, height: 20, targetScene: 3, sound: 'button.mp3' }
       ],
       autoNext: null
     },
     {
       img: 'images/panneau_ascenseur1.jpg',
-      sound: 'ascenseur.mp3',
-      hotspots: [],
-      autoNext: { delay: 4000, targetScene: 3 } 
+      sound: 'fin.mp3',
+      hotspots: [
+        { x: 45, y: 70, width: 10, height: 20, targetScene: 4, sound: 'button.mp3' }
+      ],
+      autoNext: null
     },
     {
       img: 'images/panneau_ascenseur2.jpg',
-      sound: 'ascenseur.mp3',
+      sound: 'fin.mp3',
       hotspots: [],
+      autoNext: { delay: 4000, targetScene: 5 }
+    },
+    {
+      img: 'images/attente_ascenseur.jpg',
+      sound: 'fin.mp3',
+      hotspots: [],
+      autoNext: { delay: 4000, targetScene: 6 }
+    },
+    {
+      img: 'images/attente_ascenseur2.jpg',
+      sound: 'fin.mp3',
+      hotspots: [
+      { x: 45, y: 70, width: 10, height: 20, targetScene: 7, sound: 'button.mp3' },
+      ],
+      autoNext: null
+    },
+    {
+      img: 'images/couloir2.jpg',
+      sound: 'fin.mp3',
+      hotspots: [
+      { x: 45, y: 70, width: 10, height: 20, targetScene: 8, sound: 'button.mp3' }
+      ],
+      autoNext: null
+    },
+    {
+      img: 'images/porte.jpg',
+      sound: 'fin.mp3',
+      hotspots: [
+      { x: 45, y: 70, width: 10, height: 20, targetScene: 8, sound: 'button.mp3' }
+      ],
       autoNext: null
     },
   ];
@@ -143,7 +175,6 @@
       playSound(extraSound || scenes[currentScene].sound);
       fadeDiv.style.opacity = 0; // Fin fondu
 
-      // Si autonext
       if (scenes[currentScene].autoNext) {
         autoTimer = setTimeout(() => {
           changeScene(scenes[currentScene].autoNext.targetScene);
