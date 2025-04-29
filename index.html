@@ -20,8 +20,7 @@
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
-      transition: opacity 0.5s ease;
-      opacity: 1;
+      transition: transform 1.5s ease;
     }
 
     #fade {
@@ -33,7 +32,7 @@
       height: 100%;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.5s ease;
+      transition: opacity 1.5s ease;
       z-index: 10;
     }
 
@@ -51,143 +50,214 @@
   </style>
 </head>
 <body>
+  <button id="startBtn" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 1em 2em; font-size: 20px; z-index: 20;">
+    Retournez dans votre chambre
+  </button>
 
-<div id="scene"></div>
-<div id="fade"></div>
+  <div id="scene"></div>
+  <div id="fade"></div>
 
-<script>
-  const scenes = [
-    {
-      img: 'images/face_ascenseur1.jpg',
-      sound: 'clic.mp3',
-      hotspots: [
-        { x: 45, y: 70, width: 10, height: 20, targetScene: 1, sound: 'button.mp3' }
-      ],
-      autoNext: null
-    },
-    {
-      img: 'images/face_ascenseur2.jpg',
-      sound: 'porte.mp3',
-      hotspots: [],
-      autoNext: { delay: 4000, targetScene: 2 }
-    },
-    {
-      img: 'images/face_ascenseur3.jpg',
-      sound: 'entree.mp3',
-      hotspots: [
-        { x: 45, y: 70, width: 10, height: 20, targetScene: 3, sound: 'button.mp3' }
-      ],
-      autoNext: null
-    },
-    {
-      img: 'images/panneau_ascenseur1.jpg',
-      sound: 'fin.mp3',
-      hotspots: [
-        { x: 45, y: 70, width: 10, height: 20, targetScene: 4, sound: 'button.mp3' }
-      ],
-      autoNext: null
-    },
-    {
-      img: 'images/panneau_ascenseur2.jpg',
-      sound: 'fin.mp3',
-      hotspots: [],
-      autoNext: { delay: 4000, targetScene: 5 }
-    },
-    {
-      img: 'images/attente_ascenseur.jpg',
-      sound: 'fin.mp3',
-      hotspots: [],
-      autoNext: { delay: 4000, targetScene: 6 }
-    },
-    {
-      img: 'images/attente_ascenseur2.jpg',
-      sound: 'fin.mp3',
-      hotspots: [
-      { x: 45, y: 70, width: 10, height: 20, targetScene: 7, sound: 'button.mp3' },
-      ],
-      autoNext: null
-    },
-    {
-      img: 'images/couloir2.jpg',
-      sound: 'fin.mp3',
-      hotspots: [
-      { x: 45, y: 70, width: 10, height: 20, targetScene: 8, sound: 'button.mp3' }
-      ],
-      autoNext: null
-    },
-    {
-      img: 'images/porte.jpg',
-      sound: 'fin.mp3',
-      hotspots: [
-      { x: 45, y: 70, width: 10, height: 20, targetScene: 8, sound: 'button.mp3' }
-      ],
-      autoNext: null
-    },
-  ];
-
-  let currentScene = 0;
-  let autoTimer = null;
-  const sceneDiv = document.getElementById('scene');
-  const fadeDiv = document.getElementById('fade');
-
-  function playSound(src) {
-    if (src) {
-      const audio = new Audio(src);
-      audio.play();
-    }
-  }
-
-  function clearHotspots() {
-    document.querySelectorAll('.hotspot').forEach(h => h.remove());
-  }
-
-  function createHotspots(hotspots) {
-    clearHotspots();
-
-    hotspots.forEach(h => {
-      const div = document.createElement('div');
-      div.className = 'hotspot';
-      div.style.left = h.x + '%';
-      div.style.top = h.y + '%';
-      div.style.width = h.width + '%';
-      div.style.height = h.height + '%';
-
-      div.addEventListener('click', (e) => {
-        e.stopPropagation();
-        changeScene(h.targetScene, h.sound);
-      });
-
-      sceneDiv.appendChild(div);
-    });
-  }
-
-  function changeScene(index, extraSound = null) {
-    if (autoTimer) {
-      clearTimeout(autoTimer);
-      autoTimer = null;
-    }
-
-    fadeDiv.style.opacity = 1; // Début fondu noir
-    setTimeout(() => {
-      currentScene = index;
-      sceneDiv.style.backgroundImage = `url(${scenes[currentScene].img})`;
-      createHotspots(scenes[currentScene].hotspots);
-      playSound(extraSound || scenes[currentScene].sound);
-      fadeDiv.style.opacity = 0; // Fin fondu
-
-      if (scenes[currentScene].autoNext) {
-        autoTimer = setTimeout(() => {
-          changeScene(scenes[currentScene].autoNext.targetScene);
-        }, scenes[currentScene].autoNext.delay);
+  <script>
+    const scenes = [
+      {
+        img: 'images/face_ascenseur1.jpg',
+        sound: '',
+        soundDelay: 0,
+        fade: false,
+        fadeDuration: 1500,
+        zoom: { enabled: false },
+        hotspots: [
+          { x: 45, y: 70, width: 10, height: 20, targetScene: 1, sound: 'sons/elevatordoor.wav' }
+        ],
+        autoNext: null
+      },
+      {
+        img: 'images/face_ascenseur2.jpg',
+        sound: '',
+        soundDelay: 500,
+        fade: true,
+        fadeDuration: 2000,
+        zoom: { enabled: false, scale: 1.1 },
+        hotspots: [],
+        autoNext: { delay: 4000, targetScene: 2 }
+      },
+      {
+        img: 'images/face_ascenseur3.jpg',
+        sound: 'entree.mp3',
+        soundDelay: 0,
+        fade: false,
+        fadeDuration: 1500,
+        zoom: { enabled: true },
+        hotspots: [
+          { x: 45, y: 70, width: 10, height: 20, targetScene: 3, sound: 'sons/step.wav' }
+        ],
+        autoNext: null
+      },
+      {
+        img: 'images/panneau_ascenseur1.jpg',
+        sound: 'fin.mp3',
+        soundDelay: 0,
+        fade: true,
+        fadeDuration: 1500,
+        zoom: { enabled: true, scale: 1.1 },
+        hotspots: [
+          { x: 45, y: 70, width: 10, height: 20, targetScene: 4, sound: '' }
+        ],
+        autoNext: null
+      },
+      {
+        img: 'images/panneau_ascenseur2.jpg',
+        sound: 'fin.mp3',
+        soundDelay: 500,
+        fade: false,
+        fadeDuration: 2000,
+        zoom: { enabled: false },
+        hotspots: [],
+        autoNext: { delay: 4000, targetScene: 5 }
+      },
+      {
+        img: 'images/attente_ascenseur.jpg',
+        sound: 'fin.mp3',
+        soundDelay: 500,
+        fade: true,
+        fadeDuration: 2000,
+        zoom: { enabled: true, scale: 1.05 },
+        hotspots: [],
+        autoNext: { delay: 4000, targetScene: 6 }
+      },
+      {
+        img: 'images/attente_ascenseur2.jpg',
+        sound: 'fin.mp3',
+        soundDelay: 0,
+        fade: false,
+        fadeDuration: 1500,
+        zoom: { enabled: false },
+        hotspots: [
+          { x: 45, y: 70, width: 10, height: 20, targetScene: 7, sound: 'button.mp3' }
+        ],
+        autoNext: null
+      },
+      {
+        img: 'images/couloir2.jpg',
+        sound: 'fin.mp3',
+        soundDelay: 500,
+        fade: true,
+        fadeDuration: 1500,
+        zoom: { enabled: true, scale: 1.1 },
+        hotspots: [
+          { x: 45, y: 70, width: 10, height: 20, targetScene: 8, sound: 'button.mp3' }
+        ],
+        autoNext: null
+      },
+      {
+        img: 'images/porte.jpg',
+        sound: 'fin.mp3',
+        soundDelay: 0,
+        fade: true,
+        fadeDuration: 1500,
+        zoom: { enabled: false },
+        hotspots: [],
+        autoNext: null
       }
-    }, 500);
-  }
+    ];
 
-  sceneDiv.style.backgroundImage = `url(${scenes[0].img})`;
-  createHotspots(scenes[0].hotspots);
-  playSound(scenes[0].sound);
+    let currentScene = 0;
+    let autoTimer = null;
+    const sceneDiv = document.getElementById('scene');
+    const fadeDiv = document.getElementById('fade');
 
-</script>
+    sceneDiv.style.transition = 'transform 1.5s ease';
 
+    function playSound(src) {
+      if (src) {
+        const audio = new Audio(src);
+        audio.play();
+      }
+    }
+
+    function clearHotspots() {
+      document.querySelectorAll('.hotspot').forEach(h => h.remove());
+    }
+
+    function createHotspots(hotspots) {
+      clearHotspots();
+      hotspots.forEach(h => {
+        const div = document.createElement('div');
+        div.className = 'hotspot';
+        div.style.left = h.x + '%';
+        div.style.top = h.y + '%';
+        div.style.width = h.width + '%';
+        div.style.height = h.height + '%';
+
+        div.addEventListener('click', (e) => {
+          e.stopPropagation();
+          changeScene(h.targetScene, h.sound);
+        });
+
+        sceneDiv.appendChild(div);
+      });
+    }
+
+    function resetZoom() {
+      sceneDiv.style.transform = 'scale(1)';
+    }
+
+    function applyZoom(scale, duration) {
+      sceneDiv.style.transition = `transform ${duration}ms ease`;
+      sceneDiv.style.transform = `scale(${scale})`;
+    }
+
+    function changeScene(index, extraSound = null) {
+      if (autoTimer) {
+        clearTimeout(autoTimer);
+        autoTimer = null;
+      }
+
+      const scene = scenes[index];
+      const fade = scene.fade !== false;
+      const fadeDuration = scene.fadeDuration || 1500;
+      const zoom = scene.zoom && scene.zoom.enabled ? scene.zoom.scale || 1.1 : null;
+      const soundToPlay = extraSound || scene.sound;
+      const delay = scene.soundDelay != null ? scene.soundDelay : fadeDuration / 2;
+
+      fadeDiv.style.transition = `opacity ${fadeDuration}ms ease`;
+
+      const applyScene = () => {
+        currentScene = index;
+        resetZoom();
+        sceneDiv.style.backgroundImage = `url(${scene.img})`;
+        createHotspots(scene.hotspots);
+
+        if (soundToPlay) {
+          setTimeout(() => playSound(soundToPlay), delay);
+        }
+
+        if (scene.autoNext) {
+          autoTimer = setTimeout(() => {
+            changeScene(scene.autoNext.targetScene);
+          }, scene.autoNext.delay);
+        }
+      };
+
+      if (fade) {
+        fadeDiv.style.opacity = 1;
+
+        if (zoom) applyZoom(zoom, fadeDuration);
+
+        setTimeout(() => {
+          applyScene();
+          fadeDiv.style.opacity = 0;
+          resetZoom();
+        }, fadeDuration);
+      } else {
+        applyScene();
+      }
+    }
+
+    document.getElementById('startBtn').addEventListener('click', () => {
+      document.getElementById('startBtn').remove();
+      changeScene(0);
+    });
+  </script>
 </body>
 </html>
