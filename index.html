@@ -4,20 +4,21 @@
   <meta charset="UTF-8">
   <title>Bienvenue dans l'Hôtel</title>
   <style>
-    body, html {
+    html, body {
       margin: 0;
       padding: 0;
       overflow: hidden;
       background: black;
       height: 100vh;
       width: 100vw;
+      font-family: 'Courier New', monospace;
     }
 
     #scene {
       position: relative;
       height: 100%;
       width: 100%;
-      background-size: contain;
+      background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
       transition: transform 1.5s ease;
@@ -36,24 +37,21 @@
       z-index: 10;
     }
 
-      #sceneText {
-    position: absolute;
-    bottom: 500px;
-    left: 80%;
-    transform: translateX(-50%);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: white;
-    font-size: 1.5em;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 0.5em 1em;
-    z-index: 11;
-    opacity: 1;
-    max-width: 90%;
-  }
-
-
+    #sceneText {
+      position: absolute;
+      bottom: 5%;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-size: 2em;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 1em 2em;
+      z-index: 11;
+      opacity: 0;
+      max-width: 90%;
+      text-align: center;
+      border-radius: 10px;
+    }
 
     .hotspot {
       position: absolute;
@@ -66,243 +64,253 @@
       cursor: pointer;
       border-color: rgba(255, 255, 255, 0.7);
     }
+
+    #startBtn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 1em 2em;
+      font-size: 20px;
+      z-index: 20;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
-  <button id="startBtn" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 1em 2em; font-size: 20px; z-index: 20;">
-    Retournez dans votre chambre
-  </button>
+
+  <button id="startBtn">Retournez dans votre chambre</button>
 
   <div id="scene"></div>
   <div id="fade"></div>
   <div id="sceneText"></div>
 
+  <audio id="ambiance" src="sons/ambiance.mp3" loop autoplay hidden></audio>
 
   <script>
     const scenes = [
-      {
-        img: 'images/face_ascenseur1.jpg',
-        sound: '',
-        soundDelay: 0,
-        fade: false,
-        fadeDuration: 1500,
-        zoom: { enabled: false },
-        text: "Entrez dans l'ascenseur",
-        hotspots: [
-          { x: 58, y: 57.5, width: 1, height: 2, targetScene: 1, sound: 'sons/elevatordoor.wav' }
-        ],
-        autoNext: null
-      },
-      {
-        img: 'images/face_ascenseur2.jpg',
-        sound: '',
-        soundDelay: 500,
-        fade: true,
-        fadeDuration: 2000,
-        zoom: { enabled: false, scale: 1.1 },
-        text: "Entrez dans l'ascenseur",
-        hotspots: [],
-        autoNext: { delay: 4000, targetScene: 2 }
-      },
-      {
-        img: 'images/face_ascenseur3.jpg',
-        sound: 'entree.mp3',
-        soundDelay: 0,
-        fade: false,
-        fadeDuration: 1500,
-        zoom: { enabled: true, scale: 1.1 },
-        text: "Entrez dans l'ascenseur",
-        hotspots: [
-          { x: 46, y: 30, width: 10, height: 55, targetScene: 3, sound: 'sons/step.wav' }
-        ],
-        autoNext: null
-      },
-      {
-        img: 'images/panneau_ascenseur1.jpg',
-        sound: 'fin.mp3',
-        soundDelay: 0,
-        fade: true,
-        fadeDuration: 1500,
-        zoom: { enabled: false, scale: 1.1 },
-        text: "Montez au premier étage",
-        hotspots: [
-          { x: 45.5, y: 41, width: 2, height: 4, targetScene: 4, sound: '' }
-        ],
-        autoNext: null
-      },
-      {
-        img: 'images/panneau_ascenseur2.jpg',
-        sound: 'fin.mp3',
-        soundDelay: 500,
-        fade: false,
-        fadeDuration: 2000,
-        zoom: { enabled: false },
-        text: "Montez au premier étage",
-        hotspots: [],
-        autoNext: { delay: 4000, targetScene: 5 }
-      },
-      {
-        img: 'images/attente_ascenseur.jpg',
-        sound: 'fin.mp3',
-        soundDelay: 500,
-        fade: false,
-        fadeDuration: 2000,
-        zoom: { enabled: false, scale: 1.05 },
-        text: "Retrouvez votre chambre",
-        hotspots: [],
-        autoNext: { delay: 4000, targetScene: 6 }
-      },
-      {
-        img: 'images/attente_ascenseur2.jpg',
-        sound: '',
-        soundDelay: 0,
-        fade: false,
-        fadeDuration: 1500,
-        zoom: { enabled: false },
-        text: "Retrouvez votre chambre",
-        hotspots: [
-          { x: 45, y: 30, width: 10, height: 55, targetScene: 7, sound: 'sons/step.wav'}
-        ],
-        autoNext: null
-      },
-      {
-        img: 'images/couloir2.jpg',
-        sound: 'fin.mp3',
-        soundDelay: 500,
-        fade: true,
-        fadeDuration: 1500,
-        zoom: { enabled: true, scale: 1.1 },
-        text: "Retrouvez votre chambre",
-        hotspots: [
-          { x: 45, y: 70, width: 10, height: 20, targetScene: 8, sound: 'sons/step.wav' }
-        ],
-        autoNext: null
-      },
-      {
-        img: 'images/porte.jpg',
-        sound: 'fin.mp3',
-        soundDelay: 0,
-        fade: true,
-        fadeDuration: 1500,
-        zoom: { enabled: false },
-        text: "Retrouvez votre chambre",
-        hotspots: [
-        { x: 45, y: 70, width: 10, height: 20, targetScene: 9, sound: 'sons/keys.wav' }
-        ],
-        autoNext: null
-      },
-      {
-        img: 'images/portevuepres.jpg',
-        sound: 'fin.mp3',
-        soundDelay: 0,
-        fade: true,
-        fadeDuration: 1500,
-        zoom: { enabled: false },
-        text: "Vous sortez voc clefs",
-        hotspots: [
-        { x: 45, y: 70, width: 10, height: 20, targetScene: 10, sound: 'sons/dooropen.wav' }
-        ],
-        autoNext: null
-      },
-      {
-        img: 'images/vue_meuble.jpg',
-        sound: 'fin.mp3',
-        soundDelay: 0,
-        fade: true,
-        fadeDuration: 1500,
-        zoom: { enabled: false },
-        text: "Explorez votre chambre",
-        hotspots: [
-        { x: 45, y: 70, width: 10, height: 20, targetScene: 11, sound: 'sons/step.wav' }
-        ],
-        autoNext: null
-      },
-      {
-        img: 'images/meuble.jpg',
-        sound: 'fin.mp3',
-        soundDelay: 0,
-        fade: true,
-        fadeDuration: 1500,
-        zoom: { enabled: false },
-        text: "Explorez votre chambre",
-        hotspots: [
-        { x: 45, y: 70, width: 10, height: 20, targetScene: 12, sound: 'sons/drawer.wav' }
-        ],
-        autoNext: null
-      },
-      {
-        img: 'images/meuble_ouvert.jpg',
-        sound: 'fin.mp3',
-        soundDelay: 0,
-        fade: true,
-        fadeDuration: 1500,
-        zoom: { enabled: false },
-        text: "Explorez votre chambre",
-        hotspots: [
-        { x: 45, y: 70, width: 10, height: 20, targetScene: 13, sound: 'sons/step.wav' }
-        ],
-        autoNext: null
-      },
-      {
-        img: 'images/chambrenuit.png',
-        sound: 'fin.mp3',
-        soundDelay: 0,
-        fade: true,
-        fadeDuration: 1500,
-        zoom: { enabled: false },
-        text: "Il a fait sauter le courant dans votre chambre",
-        hotspots: [
-        { x: 45, y: 70, width: 10, height: 20, targetScene: 14, sound: 'sons/step.wav' }
-        ],
-        autoNext: null
-      },
-      {
-        img: 'images/armoirenuit.png',
-        sound: 'fin.mp3',
-        soundDelay: 0,
-        fade: true,
-        fadeDuration: 1500,
-        zoom: { enabled: false },
-        text: "Il arrive",
-        hotspots: [
-        { x: 45, y: 70, width: 10, height: 20, targetScene: 15, sound: 'sons/step.wav' }
-        ],
-        autoNext: null
-      },
-      {
-        img: 'images/armoirefermernuit.png',
-        sound: 'fin.mp3',
-        soundDelay: 0,
-        fade: true,
-        fadeDuration: 1500,
-        zoom: { enabled: false },
-        text: "Il est devant votre porte",
-        hotspots: [
-        { x: 45, y: 70, width: 10, height: 20, targetScene: 16, sound: 'sons/step.wav' }
-        ],
-        autoNext: null
-      },
-      {
-        img: 'images/armoireouvertenuit.png',
-        sound: 'fin.mp3',
-        soundDelay: 0,
-        fade: true,
-        fadeDuration: 1500,
-        zoom: { enabled: false },
-        text: "",
-        hotspots: [
-        { x: 45, y: 70, width: 10, height: 20, targetScene: 17, sound: 'sons/step.wav' }
-        ],
-        autoNext: null
-      }
+    {
+    img: 'images/face_ascenseur1.jpg',
+    sound: '',
+    soundDelay: 0,
+    fade: false,
+    fadeDuration: 1500,
+    zoom: { enabled: false },
+    text: "Je vais me reposer dans ma chambre",
+    hotspots: [
+      { x: 58, y: 57.5, width: 1, height: 2, targetScene: 1, sound: 'sons/elevatordoor.wav' }
+    ],
+    autoNext: null
+  },
+  {
+    img: 'images/face_ascenseur2.jpg',
+    sound: '',
+    soundDelay: 500,
+    fade: true,
+    fadeDuration: 2000,
+    zoom: { enabled: false, scale: 1.1 },
+    text: "Cet ascenseur m'a jamais inspiré confiance...",
+    hotspots: [],
+    autoNext: { delay: 4000, targetScene: 2 }
+  },
+  {
+    img: 'images/face_ascenseur3.jpg',
+    sound: 'entree.mp3',
+    soundDelay: 0,
+    fade: false,
+    fadeDuration: 1500,
+    zoom: { enabled: true, scale: 1.1 },
+    text: "Il faut que j'aille au 1er étage",
+    hotspots: [
+      { x: 46, y: 30, width: 10, height: 55, targetScene: 3, sound: 'sons/step.wav' }
+    ],
+    autoNext: null
+  },
+  {
+    img: 'images/panneau_ascenseur1.jpg',
+    sound: 'fin.mp3',
+    soundDelay: 0,
+    fade: true,
+    fadeDuration: 1500,
+    zoom: { enabled: false, scale: 1.1 },
+    text: "Montez au premier étage",
+    hotspots: [
+      { x: 45.5, y: 41, width: 2, height: 4, targetScene: 4, sound: '' }
+    ],
+    autoNext: null
+  },
+  {
+    img: 'images/panneau_ascenseur2.jpg',
+    sound: 'fin.mp3',
+    soundDelay: 500,
+    fade: false,
+    fadeDuration: 2000,
+    zoom: { enabled: false },
+    text: "Montez au premier étage",
+    hotspots: [],
+    autoNext: { delay: 4000, targetScene: 5 }
+  },
+  {
+    img: 'images/attente_ascenseur.jpg',
+    sound: 'fin.mp3',
+    soundDelay: 500,
+    fade: false,
+    fadeDuration: 2000,
+    zoom: { enabled: false, scale: 1.05 },
+    text: "Retrouvez votre chambre",
+    hotspots: [],
+    autoNext: { delay: 4000, targetScene: 6 }
+  },
+  {
+    img: 'images/attente_ascenseur2.jpg',
+    sound: '',
+    soundDelay: 0,
+    fade: false,
+    fadeDuration: 1500,
+    zoom: { enabled: false },
+    text: "Retrouvez votre chambre",
+    hotspots: [
+      { x: 45, y: 30, width: 10, height: 55, targetScene: 7, sound: 'sons/step.wav'}
+    ],
+    autoNext: null
+  },
+  {
+    img: 'images/couloir2.jpg',
+    sound: 'fin.mp3',
+    soundDelay: 500,
+    fade: true,
+    fadeDuration: 1500,
+    zoom: { enabled: true, scale: 1.1 },
+    text: "Retrouvez votre chambre",
+    hotspots: [
+      { x: 45, y: 70, width: 10, height: 20, targetScene: 8, sound: 'sons/step.wav' }
+    ],
+    autoNext: null
+  },
+  {
+    img: 'images/porte.jpg',
+    sound: 'fin.mp3',
+    soundDelay: 0,
+    fade: true,
+    fadeDuration: 1500,
+    zoom: { enabled: false },
+    text: "Retrouvez votre chambre",
+    hotspots: [
+    { x: 45, y: 70, width: 10, height: 20, targetScene: 9, sound: 'sons/keys.wav' }
+    ],
+    autoNext: null
+  },
+  {
+    img: 'images/portevuepres.jpg',
+    sound: 'fin.mp3',
+    soundDelay: 0,
+    fade: true,
+    fadeDuration: 1500,
+    zoom: { enabled: false },
+    text: "Vous sortez voc clefs",
+    hotspots: [
+    { x: 45, y: 70, width: 10, height: 20, targetScene: 10, sound: 'sons/dooropen.wav' }
+    ],
+    autoNext: null
+  },
+  {
+    img: 'images/vue_meuble.jpg',
+    sound: 'fin.mp3',
+    soundDelay: 0,
+    fade: true,
+    fadeDuration: 1500,
+    zoom: { enabled: false },
+    text: "Explorez votre chambre",
+    hotspots: [
+    { x: 45, y: 70, width: 10, height: 20, targetScene: 11, sound: 'sons/step.wav' }
+    ],
+    autoNext: null
+  },
+  {
+    img: 'images/meuble.jpg',
+    sound: 'fin.mp3',
+    soundDelay: 0,
+    fade: true,
+    fadeDuration: 1500,
+    zoom: { enabled: false },
+    text: "Explorez votre chambre",
+    hotspots: [
+    { x: 45, y: 70, width: 10, height: 20, targetScene: 12, sound: 'sons/drawer.wav' }
+    ],
+    autoNext: null
+  },
+  {
+    img: 'images/meuble_ouvert.jpg',
+    sound: 'fin.mp3',
+    soundDelay: 0,
+    fade: true,
+    fadeDuration: 1500,
+    zoom: { enabled: false },
+    text: "Explorez votre chambre",
+    hotspots: [
+    { x: 45, y: 70, width: 10, height: 20, targetScene: 13, sound: 'sons/step.wav' }
+    ],
+    autoNext: null
+  },
+  {
+    img: 'images/chambrenuit.png',
+    sound: 'fin.mp3',
+    soundDelay: 0,
+    fade: true,
+    fadeDuration: 1500,
+    zoom: { enabled: false },
+    text: "Il a fait sauter le courant dans votre chambre",
+    hotspots: [
+    { x: 45, y: 70, width: 10, height: 20, targetScene: 14, sound: 'sons/step.wav' }
+    ],
+    autoNext: null
+  },
+  {
+    img: 'images/armoirenuit.png',
+    sound: 'fin.mp3',
+    soundDelay: 0,
+    fade: true,
+    fadeDuration: 1500,
+    zoom: { enabled: false },
+    text: "Il arrive",
+    hotspots: [
+    { x: 45, y: 70, width: 10, height: 20, targetScene: 15, sound: 'sons/step.wav' }
+    ],
+    autoNext: null
+  },
+  {
+    img: 'images/armoirefermernuit.png',
+    sound: 'fin.mp3',
+    soundDelay: 0,
+    fade: true,
+    fadeDuration: 1500,
+    zoom: { enabled: false },
+    text: "Il est devant votre porte",
+    hotspots: [
+    { x: 45, y: 70, width: 10, height: 20, targetScene: 16, sound: 'sons/step.wav' }
+    ],
+    autoNext: null
+  },
+  {
+    img: 'images/armoireouvertenuit.png',
+    sound: 'fin.mp3',
+    soundDelay: 0,
+    fade: true,
+    fadeDuration: 1500,
+    zoom: { enabled: false },
+    text: "",
+    hotspots: [
+    { x: 45, y: 70, width: 10, height: 20, targetScene: 17, sound: 'sons/step.wav' }
+    ],
+    autoNext: null
+  }
     ];
 
     let currentScene = 0;
     let autoTimer = null;
     const sceneDiv = document.getElementById('scene');
     const fadeDiv = document.getElementById('fade');
-
-    sceneDiv.style.transition = 'transform 1.5s ease';
+    const sceneText = document.getElementById('sceneText');
 
     function playSound(src) {
       if (src) {
@@ -343,57 +351,68 @@
       sceneDiv.style.transform = `scale(${scale})`;
     }
 
+    function typeWriter(element, text, speed = 30) {
+      element.textContent = '';
+      element.style.opacity = 1;
+      let i = 0;
+      function type() {
+        if (i < text.length) {
+          element.textContent += text.charAt(i);
+          i++;
+          setTimeout(type, speed);
+        }
+      }
+      type();
+    }
+
     function changeScene(index, extraSound = null) {
-  if (autoTimer) {
-    clearTimeout(autoTimer);
-    autoTimer = null;
-  }
+      if (autoTimer) {
+        clearTimeout(autoTimer);
+        autoTimer = null;
+      }
 
-  const scene = scenes[index];
-  const fade = scene.fade !== false;
-  const fadeDuration = scene.fadeDuration || 1500;
-  const zoom = scene.zoom && scene.zoom.enabled ? scene.zoom.scale || 1.1 : null;
-  const soundToPlay = extraSound || scene.sound;
-  const delay = scene.soundDelay != null ? scene.soundDelay : fadeDuration / 2;
+      const scene = scenes[index];
+      const fade = scene.fade !== false;
+      const fadeDuration = scene.fadeDuration || 1500;
+      const zoom = scene.zoom && scene.zoom.enabled ? scene.zoom.scale || 1.1 : null;
+      const soundToPlay = extraSound || scene.sound;
+      const delay = scene.soundDelay != null ? scene.soundDelay : fadeDuration / 2;
 
-  fadeDiv.style.transition = `opacity ${fadeDuration}ms ease`;
+      fadeDiv.style.transition = `opacity ${fadeDuration}ms ease`;
 
-  const applyScene = () => {
-    currentScene = index;
-    resetZoom();
-    sceneDiv.style.backgroundImage = `url(${scene.img})`;
-    createHotspots(scene.hotspots);
+      const applyScene = () => {
+        currentScene = index;
+        resetZoom();
+        sceneDiv.style.backgroundImage = `url(${scene.img})`;
+        createHotspots(scene.hotspots);
 
-    // Afficher le texte avec un délai court après le fade
-    setTimeout(() => {
-      sceneText.textContent = scene.text || '';
-      sceneText.style.opacity = 1;
-    }, 500);
+        setTimeout(() => {
+          typeWriter(sceneText, scene.text || '');
+        }, 500);
 
-    if (soundToPlay) {
-      setTimeout(() => playSound(soundToPlay), delay);
+        if (soundToPlay) {
+          setTimeout(() => playSound(soundToPlay), delay);
+        }
+
+        if (scene.autoNext) {
+          autoTimer = setTimeout(() => {
+            changeScene(scene.autoNext.targetScene);
+          }, scene.autoNext.delay);
+        }
+      };
+
+      if (fade) {
+        fadeDiv.style.opacity = 1;
+        if (zoom) applyZoom(zoom, fadeDuration);
+        setTimeout(() => {
+          applyScene();
+          fadeDiv.style.opacity = 0;
+          resetZoom();
+        }, fadeDuration);
+      } else {
+        applyScene();
+      }
     }
-
-    if (scene.autoNext) {
-      autoTimer = setTimeout(() => {
-        changeScene(scene.autoNext.targetScene);
-      }, scene.autoNext.delay);
-    }
-  };
-
-  if (fade) {
-    fadeDiv.style.opacity = 1;
-    if (zoom) applyZoom(zoom, fadeDuration);
-    setTimeout(() => {
-      applyScene();
-      fadeDiv.style.opacity = 0;
-      resetZoom();
-    }, fadeDuration);
-  } else {
-    applyScene();
-  }
-}
-
 
     document.getElementById('startBtn').addEventListener('click', () => {
       document.getElementById('startBtn').remove();
