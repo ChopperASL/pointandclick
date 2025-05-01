@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Coordonnées sur Image</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    #mainImage {
+      max-width: 90%;
+      height: auto;
+      cursor: crosshair;
+    }
+    #coords {
+      margin-top: 20px;
+      font-size: 1.5em;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Clique sur l'image pour connaître les coordonnées</h1>
+  <img id="mainImage" src="images/face_ascenseur1.jpg" alt="Image test">
+  <div id="coords">X: –, Y: –</div>
+
+  <script>
+    const img = document.getElementById('mainImage');
+    const coords = document.getElementById('coords');
+
+    img.addEventListener('click', function (e) {
+      const rect = img.getBoundingClientRect();
+      const scaleX = img.naturalWidth / rect.width;
+      const scaleY = img.naturalHeight / rect.height;
+
+      const x = Math.round((e.clientX - rect.left) * scaleX);
+      const y = Math.round((e.clientY - rect.top) * scaleY);
+
+      coords.textContent = `X: ${x}, Y: ${y}`;
+      console.log(`Coordonnées cliquées => X: ${x}, Y: ${y}`);
+    });
+  </script>
+
+</body>
+</html>

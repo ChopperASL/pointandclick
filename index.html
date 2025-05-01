@@ -58,6 +58,7 @@
       border: 2px dashed rgba(255, 255, 255, 0.2);
       z-index: 5;
       transition: border-color 0.3s;
+      opacity: 0;
     }
 
     .hotspot:hover {
@@ -84,6 +85,35 @@
   <div id="scene"></div>
   <div id="fade"></div>
   <div id="sceneText"></div>
+  <input type="text" id="codeInput" placeholder="parfois les lumières peuvent parler aussi" style="
+  position: absolute;
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.5em;
+  font-size: 1.5em;
+  display: none;
+  z-index: 12;
+  border-radius: 10px;
+  border: none;
+  text-align: center;
+">
+
+<div id="endMessage" style="
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 2em;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 1em 2em;
+  border-radius: 10px;
+  display: none;
+  z-index: 12;
+  text-align: center;
+"></div>
+
 
   <audio id="ambiance" src="sons/ambiance.mp3" loop autoplay hidden></audio>
 
@@ -98,7 +128,7 @@
     zoom: { enabled: false },
     text: "Je vais me reposer dans ma chambre",
     hotspots: [
-      { x: 58, y: 57.5, width: 1, height: 2, targetScene: 1, sound: 'sons/elevatordoor.wav' }
+      { x: 73, y: 72, width: 1.5, height: 3, targetScene: 1, sound: 'sons/elevatordoor.wav' }
     ],
     autoNext: null
   },
@@ -122,7 +152,7 @@
     zoom: { enabled: true, scale: 1.1 },
     text: "Il faut que j'aille au 1er étage",
     hotspots: [
-      { x: 46, y: 30, width: 10, height: 55, targetScene: 3, sound: 'sons/step.wav' }
+      { x: 46, y: 30, width: 15, height: 65, targetScene: 3, sound: 'sons/step.wav' }
     ],
     autoNext: null
   },
@@ -133,9 +163,9 @@
     fade: true,
     fadeDuration: 1500,
     zoom: { enabled: false, scale: 1.1 },
-    text: "Montez au premier étage",
+    text: "Je devrai aller me reposer",
     hotspots: [
-      { x: 45.5, y: 41, width: 2, height: 4, targetScene: 4, sound: '' }
+      { x: 38.5, y: 28.5, width: 4, height: 8, targetScene: 4, sound: '' }
     ],
     autoNext: null
   },
@@ -146,7 +176,7 @@
     fade: false,
     fadeDuration: 2000,
     zoom: { enabled: false },
-    text: "Montez au premier étage",
+    text: "Il me semble avoir laissé des médicaments pour mon sommeil",
     hotspots: [],
     autoNext: { delay: 4000, targetScene: 5 }
   },
@@ -157,7 +187,7 @@
     fade: false,
     fadeDuration: 2000,
     zoom: { enabled: false, scale: 1.05 },
-    text: "Retrouvez votre chambre",
+    text: "Je les ai laissés dans la table de nuit",
     hotspots: [],
     autoNext: { delay: 4000, targetScene: 6 }
   },
@@ -168,7 +198,7 @@
     fade: false,
     fadeDuration: 1500,
     zoom: { enabled: false },
-    text: "Retrouvez votre chambre",
+    text: "Tiens ? la femmme de ménage habituelle n'est plus là ? Comment elle s'appelait déjà...",
     hotspots: [
       { x: 45, y: 30, width: 10, height: 55, targetScene: 7, sound: 'sons/step.wav'}
     ],
@@ -181,9 +211,9 @@
     fade: true,
     fadeDuration: 1500,
     zoom: { enabled: true, scale: 1.1 },
-    text: "Retrouvez votre chambre",
+    text: "Ma chambre est sûr la droite",
     hotspots: [
-      { x: 45, y: 70, width: 10, height: 20, targetScene: 8, sound: 'sons/step.wav' }
+      { x: 45, y: 30, width: 15, height: 55, targetScene: 8, sound: 'sons/step.wav' }
     ],
     autoNext: null
   },
@@ -194,9 +224,9 @@
     fade: true,
     fadeDuration: 1500,
     zoom: { enabled: false },
-    text: "Retrouvez votre chambre",
+    text: "C'est étrange que toutes les affaires de ménages ont étés laissés dans le couloir...",
     hotspots: [
-    { x: 45, y: 70, width: 10, height: 20, targetScene: 9, sound: 'sons/keys.wav' }
+    { x: 28, y: 29, width: 8, height: 16, targetScene: 9, sound: 'sons/keys.wav' }
     ],
     autoNext: null
   },
@@ -207,9 +237,9 @@
     fade: true,
     fadeDuration: 1500,
     zoom: { enabled: false },
-    text: "Vous sortez voc clefs",
+    text: "Je prends mes cachets et au lit",
     hotspots: [
-    { x: 45, y: 70, width: 10, height: 20, targetScene: 10, sound: 'sons/dooropen.wav' }
+    { x: 35, y: 80, width: 10, height: 20, targetScene: 10, sound: 'sons/dooropen.wav' }
     ],
     autoNext: null
   },
@@ -220,9 +250,9 @@
     fade: true,
     fadeDuration: 1500,
     zoom: { enabled: false },
-    text: "Explorez votre chambre",
+    text: "J'ai cru entendre un cris en bas",
     hotspots: [
-    { x: 45, y: 70, width: 10, height: 20, targetScene: 11, sound: 'sons/step.wav' }
+    { x: 36, y: 40, width: 10, height: 20, targetScene: 11, sound: 'sons/step.wav' }
     ],
     autoNext: null
   },
@@ -233,9 +263,9 @@
     fade: true,
     fadeDuration: 1500,
     zoom: { enabled: false },
-    text: "Explorez votre chambre",
+    text: "Ma fatigue doit me jouer des tours",
     hotspots: [
-    { x: 45, y: 70, width: 10, height: 20, targetScene: 12, sound: 'sons/drawer.wav' }
+    { x: 47, y: 70, width: 10, height: 20, targetScene: 12, sound: 'sons/drawer.wav' }
     ],
     autoNext: null
   },
@@ -246,63 +276,22 @@
     fade: true,
     fadeDuration: 1500,
     zoom: { enabled: false },
-    text: "Explorez votre chambre",
+    text: "Mes cachets ne sont plus là",
     hotspots: [
-    { x: 45, y: 70, width: 10, height: 20, targetScene: 13, sound: 'sons/step.wav' }
+    { x: 30, y: 70, width: 40, height: 20, targetScene: 13, sound: 'sons/lumieredisjoncte.wav' }
     ],
     autoNext: null
   },
   {
     img: 'images/chambrenuit.png',
-    sound: 'fin.mp3',
+    sound: 'sons/fin.mp3',
     soundDelay: 0,
     fade: true,
     fadeDuration: 1500,
     zoom: { enabled: false },
-    text: "Il a fait sauter le courant dans votre chambre",
-    hotspots: [
-    { x: 45, y: 70, width: 10, height: 20, targetScene: 14, sound: 'sons/step.wav' }
-    ],
-    autoNext: null
-  },
-  {
-    img: 'images/armoirenuit.png',
-    sound: 'fin.mp3',
-    soundDelay: 0,
-    fade: true,
-    fadeDuration: 1500,
-    zoom: { enabled: false },
-    text: "Il arrive",
-    hotspots: [
-    { x: 45, y: 70, width: 10, height: 20, targetScene: 15, sound: 'sons/step.wav' }
-    ],
-    autoNext: null
-  },
-  {
-    img: 'images/armoirefermernuit.png',
-    sound: 'fin.mp3',
-    soundDelay: 0,
-    fade: true,
-    fadeDuration: 1500,
-    zoom: { enabled: false },
-    text: "Il est devant votre porte",
-    hotspots: [
-    { x: 45, y: 70, width: 10, height: 20, targetScene: 16, sound: 'sons/step.wav' }
-    ],
-    autoNext: null
-  },
-  {
-    img: 'images/armoireouvertenuit.png',
-    sound: 'fin.mp3',
-    soundDelay: 0,
-    fade: true,
-    fadeDuration: 1500,
-    zoom: { enabled: false },
-    text: "",
-    hotspots: [
-    { x: 45, y: 70, width: 10, height: 20, targetScene: 17, sound: 'sons/step.wav' }
-    ],
-    autoNext: null
+    text: "Il arrive vite je dois faire quelque chose",
+    hotspots: [],
+    autoNext: { delay: 1000, targetScene: 14 }
   }
     ];
 
@@ -338,6 +327,13 @@
           changeScene(h.targetScene, h.sound);
         });
 
+        div.addEventListener('click', (e) => {
+          e.stopPropagation();
+          clearHotspots();
+          changeScene(h.targetScene, h.sound);
+        });
+
+
         sceneDiv.appendChild(div);
       });
     }
@@ -351,24 +347,61 @@
       sceneDiv.style.transform = `scale(${scale})`;
     }
 
+    let typeWriterTimeouts = [];
+
     function typeWriter(element, text, speed = 30) {
+      // Nettoyage des précédents timeouts
+      typeWriterTimeouts.forEach(clearTimeout);
+      typeWriterTimeouts = [];
+
       element.textContent = '';
       element.style.opacity = 1;
       let i = 0;
+
       function type() {
         if (i < text.length) {
           element.textContent += text.charAt(i);
           i++;
-          setTimeout(type, speed);
+          const timeout = setTimeout(type, speed);
+          typeWriterTimeouts.push(timeout);
         }
       }
       type();
     }
 
+
+        // Ajouter cette condition juste après le typeWriter
+    setTimeout(() => {
+      if (index === 14) {
+        sceneText.style.opacity = 0;
+      }
+    }, 3000); // disparaît après 3 secondes
+
+
     function changeScene(index, extraSound = null) {
       if (autoTimer) {
         clearTimeout(autoTimer);
         autoTimer = null;
+          if (index === 14) {
+    let visible = true;
+    let blinkCount = 0;
+    codeInput.style.display = 'block';
+    codeInput.value = '';
+    codeInput.focus();
+
+    blinkInterval = setInterval(() => {
+      blinkCount++;
+      visible = !visible;
+      sceneDiv.style.backgroundImage = visible
+        ? 'url(images/chambrenuit.png)'
+        : 'url(images/chambre.jpg)';
+
+      if (blinkCount >= 6) {
+        clearInterval(blinkInterval);
+      }
+    }, 400);
+  }
+
       }
 
       const scene = scenes[index];
@@ -389,6 +422,13 @@
         setTimeout(() => {
           typeWriter(sceneText, scene.text || '');
         }, 500);
+
+        if (index === 14) { // Ou autre numéro de scène concernée
+          setTimeout(() => {
+            sceneText.style.opacity = 0;
+        }, 5000); // 5 secondes par exemple
+      }
+
 
         if (soundToPlay) {
           setTimeout(() => playSound(soundToPlay), delay);
@@ -418,6 +458,76 @@
       document.getElementById('startBtn').remove();
       changeScene(0);
     });
+
+
+    const codeInput = document.getElementById('codeInput');
+const endMessage = document.getElementById('endMessage');
+let blinkInterval = null;
+
+document.getElementById('codeInput').addEventListener('keyup', function (e) {
+  if (e.key === 'Enter') {
+    const value = this.value.trim().toUpperCase();
+    codeInput.style.display = 'none';
+    clearInterval(blinkInterval);
+
+    if (value === 'HIDE') {
+      // Entrée dans l'armoire : succession d'images
+      endMessage.style.display = 'none';
+
+      const sequence = [
+        { img: 'images/armoirenuit.png', sound: '', delay: 1000 },
+        { img: 'images/armoirefermernuit.png', sound: 'sons/dooropen.wav', delay: 3000 },
+        { img: 'images/armoireouvertenuit.png', sound: 'sons/respiration.wav', delay: 1500 },
+        { img: 'images/noir.png', sound: 'sons/victoire.wav', delay: 2000 },
+      ];
+
+      let step = 0;
+
+      const runSequence = () => {
+        if (step < sequence.length) {
+          const s = sequence[step];
+          sceneDiv.style.backgroundImage = `url(${s.img})`;
+          playSound(s.sound);
+          step++;
+          setTimeout(runSequence, s.delay);
+        } else {
+          endMessage.style.display = 'block';
+          endMessage.textContent = '9R-3X7-Q2';
+        }
+      };
+
+      runSequence();
+
+    } else {
+      // Échec : attaque du monstre
+      endMessage.textContent = '';
+      endMessage.style.display = 'block';
+
+      sceneDiv.style.backgroundImage = 'url(images/chambrenuit.jpg)';
+      fadeDiv.style.opacity = 1;
+
+      setTimeout(() => {
+        playSound('sons/dooropen.wav');
+      }, 1000);
+
+      setTimeout(() => {
+        playSound('sons/run.wav');
+        sceneDiv.style.backgroundImage = 'black';
+      }, 2500);
+
+      setTimeout(() => {
+        endMessage.style.display = 'none';
+      }, 5000);
+
+      setTimeout(() => {
+        window.close();
+    }, 4000); // Tente de fermer après la scène d'attaque
+
+    }
+  }
+});
+
+
   </script>
 </body>
 </html>
