@@ -369,10 +369,18 @@
       type();
     }
 
+    const sceneWhenTyped = currentScene;
+  setTimeout(() => {
+    if (currentScene === sceneWhenTyped && currentScene === 14) {
+      sceneText.style.opacity = 0;
+   }
+  }, 3000);
+
+
 
         // Ajouter cette condition juste après le typeWriter
     setTimeout(() => {
-      if (index === 14) {
+      if (currentScene === 14) {
         sceneText.style.opacity = 0;
       }
     }, 3000); // disparaît après 3 secondes
@@ -470,63 +478,65 @@ document.getElementById('codeInput').addEventListener('keyup', function (e) {
     codeInput.style.display = 'none';
     clearInterval(blinkInterval);
 
-    if (value === 'HIDE') {
-      // Entrée dans l'armoire : succession d'images
-      endMessage.style.display = 'none';
+    const expectedCode = atob('SElERQ=='); // Base64 de "HIDE"
+if (value === expectedCode) {
+  endMessage.style.display = 'none';
 
-      const sequence = [
-        { img: 'images/armoirenuit.png', sound: 'sons/doorslow.wav', delay: 2000 },
-        { img: 'images/armoireouvertenuit.png', sound: 'sons/respiration.wav', delay: 2500 },
-        { img: 'images/noir.png', sound: 'sons/victoire.wav', delay: 10000 },
-      ];
+  const sequence = [
+    { img: 'images/armoirenuit.png', sound: 'sons/doorslow.wav', delay: 2000 },
+    { img: 'images/armoireouvertenuit.png', sound: 'sons/respiration.wav', delay: 2500 },
+    { img: 'images/noir.png', sound: 'sons/victoire.wav', delay: 10000 },
+  ];
 
-      let step = 0;
+  let step = 0;
 
-      const runSequence = () => {
-        if (step < sequence.length) {
-          const s = sequence[step];
-          sceneDiv.style.backgroundImage = `url(${s.img})`;
-          playSound(s.sound);
-          step++;
-          setTimeout(runSequence, s.delay);
-        } else {
-          endMessage.style.display = 'block';
-          endMessage.textContent = '9R-3X7-Q2';
-        }
-      };
-
-      runSequence();
-
-    } else {
-      // Échec : attaque du monstre
-      endMessage.textContent = '';
-      endMessage.style.display = 'block';
-
-      sceneDiv.style.backgroundImage = 'url(images/chambrenuit.jpg)';
-      fadeDiv.style.opacity = 1;
-
-      setTimeout(() => {
-        playSound('sons/dooropen.wav');
-      }, 1000);
-
-      setTimeout(() => {
-        playSound('sons/run.wav');
-        sceneDiv.style.backgroundImage = 'black';
-      }, 2500);
-
-      setTimeout(() => {
-        endMessage.style.display = 'none';
-      }, 5000);
-
-      setTimeout(() => {
-        window.close();
-    }, 4000); // Tente de fermer après la scène d'attaque
-
-    }
+  const runSequence = () => {
+  if (step < sequence.length) {
+    const s = sequence[step];
+    sceneDiv.style.backgroundImage = `url(${s.img})`;
+    playSound(s.sound);
+    step++;
+    setTimeout(runSequence, s.delay);
+  } else {
+    const encoded = 'OVIzWDdRMg==';
+    const decoded = atob(encoded);
+    endMessage.style.display = 'block';
+    endMessage.textContent = decoded;
   }
+};
+
+
+  runSequence();
+
+} else {
+  // Échec : attaque du monstre
+  endMessage.textContent = '';
+  endMessage.style.display = 'block';
+
+  sceneDiv.style.backgroundImage = 'url(images/chambrenuit.jpg)';
+  fadeDiv.style.opacity = 1;
+
+  setTimeout(() => {
+    playSound('sons/dooropen.wav');
+  }, 1000);
+
+  setTimeout(() => {
+    playSound('sons/run.wav');
+    sceneDiv.style.backgroundImage = 'black';
+  }, 2500);
+
+  setTimeout(() => {
+    endMessage.style.display = 'none';
+  }, 5000);
+
+  setTimeout(() => {
+    window.close();
+  }, 4000);
+  }
+}
+
 });
 
-
-  </script>
+</script>
 </body>
 </html>
