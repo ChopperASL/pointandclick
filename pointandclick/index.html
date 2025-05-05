@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Bienvenue dans l'Hôtel</title>
+  <title>Hôtel</title>
   <style>
     html, body {
       margin: 0;
@@ -43,7 +43,7 @@
       left: 50%;
       transform: translateX(-50%);
       color: white;
-      font-size: 2em;
+      font-size: 1em;
       background: rgba(0, 0, 0, 0.6);
       padding: 1em 2em;
       z-index: 11;
@@ -128,7 +128,7 @@
     zoom: { enabled: false },
     text: "C'était une longue route je vais me reposer dans ma chambre",
     hotspots: [
-      { x: 73, y: 72, width: 1.5, height: 3, targetScene: 1, sound: 'sons/elevatordoor.wav' }
+      { x: 73, y: 70, width: 2, height: 6, targetScene: 1, sound: 'sons/elevatordoor.wav' }
     ],
     autoNext: null
   },
@@ -198,22 +198,9 @@
     fade: false,
     fadeDuration: 1500,
     zoom: { enabled: false },
-    text: "Tiens ? la femmme de ménage habituelle n'est pas là ? Comment elle s'appellait déjà...",
+    text: "Tiens ? La femmme de ménage habituelle n'est pas là ? Comment elle s'appellait déjà...",
     hotspots: [
-      { x: 45, y: 30, width: 10, height: 55, targetScene: 7, sound: 'sons/step.wav'}
-    ],
-    autoNext: null
-  },
-  {
-    img: 'images/couloir2.jpg',
-    sound: 'fin.mp3',
-    soundDelay: 500,
-    fade: true,
-    fadeDuration: 1500,
-    zoom: { enabled: true, scale: 1.1 },
-    text: "Ma chambre est sur la droite",
-    hotspots: [
-      { x: 45, y: 30, width: 15, height: 55, targetScene: 8, sound: 'sons/step.wav' }
+      { x: 55, y: 30, width: 10, height: 55, targetScene: 7, sound: 'sons/step.wav'}
     ],
     autoNext: null
   },
@@ -226,7 +213,7 @@
     zoom: { enabled: false },
     text: "C'est étrange que toutes les affaires de ménage ont étés laissées dans le couloir...",
     hotspots: [
-    { x: 28, y: 29, width: 8, height: 16, targetScene: 9, sound: 'sons/keys.wav' }
+    { x: 28, y: 29, width: 8, height: 16, targetScene: 8, sound: 'sons/keys.wav' }
     ],
     autoNext: null
   },
@@ -239,7 +226,7 @@
     zoom: { enabled: false },
     text: "...",
     hotspots: [
-    { x: 35, y: 80, width: 10, height: 20, targetScene: 10, sound: 'sons/dooropen.wav' }
+    { x: 35, y: 80, width: 10, height: 20, targetScene: 9, sound: 'sons/dooropen.wav' }
     ],
     autoNext: null
   },
@@ -252,7 +239,7 @@
     zoom: { enabled: false },
     text: "Je prends mes cachets et au dodo",
     hotspots: [
-    { x: 36, y: 40, width: 10, height: 20, targetScene: 11, sound: 'sons/step.wav' }
+    { x: 36, y: 40, width: 10, height: 20, targetScene: 10, sound: 'sons/step.wav' }
     ],
     autoNext: null
   },
@@ -263,9 +250,9 @@
     fade: true,
     fadeDuration: 1500,
     zoom: { enabled: false },
-    text: "Il y a quelqu'un qui m'a suivi il est dans le couloir, mais qu'est-ce qu'il se passe encore",
+    text: "",
     hotspots: [
-    { x: 47, y: 70, width: 10, height: 20, targetScene: 12, sound: 'sons/drawer.wav' }
+    { x: 47, y: 70, width: 10, height: 20, targetScene: 11, sound: 'sons/drawer.wav' }
     ],
     autoNext: null
   },
@@ -278,7 +265,7 @@
     zoom: { enabled: false },
     text: "Mes cachets ne sont plus là",
     hotspots: [
-    { x: 30, y: 70, width: 40, height: 20, targetScene: 13, sound: 'sons/lumieredisjoncte.mp3' }
+    { x: 30, y: 70, width: 40, height: 20, targetScene: 12, sound: 'sons/lumieredisjoncte.mp3' }
     ],
     autoNext: null
   },
@@ -289,9 +276,9 @@
     fade: true,
     fadeDuration: 1500,
     zoom: { enabled: false },
-    text: "Il... Il faut que j'agisse vite",
+    text: "Il y a quelque chose qui arrive...",
     hotspots: [],
-    autoNext: { delay: 1000, targetScene: 14 }
+    autoNext: { delay: 1000, targetScene: 13 }
   }
     ];
 
@@ -366,7 +353,7 @@
 
     const sceneWhenTyped = currentScene;
   setTimeout(() => {
-    if (currentScene === sceneWhenTyped && currentScene === 14) {
+    if (currentScene === sceneWhenTyped && currentScene === 13) {
       sceneText.style.opacity = 0;
       sceneText.textContent = '';
 
@@ -377,7 +364,7 @@
 
 
     setTimeout(() => {
-      if (currentScene === 14) {
+      if (currentScene === 13) {
         sceneText.style.opacity = 0;
       }
     }, 3000);
@@ -387,7 +374,7 @@
       if (autoTimer) {
         clearTimeout(autoTimer);
         autoTimer = null;
-          if (index === 14) {
+          if (index === 13) {
     let visible = true;
     let blinkCount = 0;
     codeInput.style.display = 'block';
@@ -428,7 +415,7 @@
           typeWriter(sceneText, scene.text || '');
         }, 500);
 
-        if (index === 14) { 
+        if (index === 13) { 
           setTimeout(() => {
             sceneText.style.opacity = 0;
         }, 5000); 
